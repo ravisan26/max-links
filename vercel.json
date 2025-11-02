@@ -1,12 +1,9 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" },
-    { "src": "public/**", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/", "dest": "/public/admin_dashboard.html" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+  "rewrites": [
+    { "source": "/api/urls", "destination": "/api/urls_api" },
+    { "source": "/api/urls/:code", "destination": "/api/urls_api" },
+    { "source": "/api/partners", "destination": "/api/partners" },
+    { "source": "/api/analytics/:code", "destination": "/api/analytics_api" },
+    { "source": "/", "destination": "/admin_dashboard.html" }
   ]
 }
