@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaxLinks Admin - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1d29;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #242836;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #242836;
+            padding: 24px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-info h3 {
+            color: #8b92a9;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .stat-info .stat-value {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+        }
+
+        /* Today's Report Section */
+        .report-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .report-header {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .report-item {
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .report-item:nth-child(1) {
+            background: rgba(72, 219, 154, 0.15);
+            border: 1px solid rgba(72, 219, 154, 0.3);
+        }
+
+        .report-item:nth-child(2) {
+            background: rgba(66, 165, 245, 0.15);
+            border: 1px solid rgba(66, 165, 245, 0.3);
+        }
+
+        .report-item:nth-child(3) {
+            background: rgba(239, 83, 80, 0.15);
+            border: 1px solid rgba(239, 83, 80, 0.3);
+        }
+
+        .report-item:nth-child(4) {
+            background: rgba(171, 71, 188, 0.15);
+            border: 1px solid rgba(171, 71, 188, 0.3);
+        }
+
+        .report-item-info h4 {
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .report-item-info .value {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .report-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .report-item:nth-child(1) .report-item-icon {
+            background: rgba(72, 219, 154, 0.3);
+        }
+
+        .report-item:nth-child(2) .report-item-icon {
+            background: rgba(66, 165, 245, 0.3);
+        }
+
+        .report-item:nth-child(3) .report-item-icon {
+            background: rgba(239, 83, 80, 0.3);
+        }
+
+        .report-item:nth-child(4) .report-item-icon {
+            background: rgba(171, 71, 188, 0.3);
+        }
+
+        .create-section {
+            background: #242836;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .create-section h2 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b92a9;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #2f3349;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #1a1d29;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #242836;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .links-section {
+            background: #242836;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .links-section h2 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .link-item {
+            background: #1a1d29;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .link-item:hover {
+            background: #202333;
+            transform: translateX(4px);
+        }
+
+        .link-code {
+            font-size: 16px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .link-url {
+            color: #8b92a9;
+            font-size: 14px;
+            margin-bottom: 12px;
+            word-break: break-all;
+        }
+
+        .link-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 12px;
+            color: #6c7388;
+            margin-bottom: 15px;
+        }
+
+        .link-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-copy {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-analytics {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-analytics:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #242836;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2f3349;
+        }
+
+        .modal-header h2 {
+            color: #fff;
+            font-size: 22px;
+        }
+
+        .close-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .analytics-card {
+            background: #1a1d29;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .analytics-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .analytics-label {
+            color: #8b92a9;
+            font-size: 13px;
+        }
+
+        .section-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+        }
+
+        .country-item, .device-item, .click-item {
+            background: #1a1d29;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8b92a9;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 MaxLinks Admin Dashboard</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Total Views</h3>
+                    <div class="stat-value" id="totalViews">0</div>
+                </div>
+                <div class="stat-icon">👁️</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Unique Viewers</h3>
+                    <div class="stat-value" id="uniqueViewers">0</div>
+                </div>
+                <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Returning Viewers</h3>
+                    <div class="stat-value" id="returningViewers">0</div>
+                </div>
+                <div class="stat-icon">🔄</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Anti Bypass</h3>
+                    <div class="stat-value" id="antiBypass">0</div>
+                </div>
+                <div class="stat-icon">🔒</div>
+            </div>
+        </div>
+
+        <!-- Today's Report -->
+        <div class="report-section">
+            <div class="report-header">Today's report / <span id="currentTime"></span></div>
+            <div class="report-grid">
+                <div class="report-item">
+                    <div class="report-item-info">
+                        <h4>Views</h4>
+                        <div class="value" id="todayViews">0</div>
+                    </div>
+                    <div class="report-item-icon">📊</div>
+                </div>
+                <div class="report-item">
+                    <div class="report-item-info">
+                        <h4>Unique Viewers</h4>
+                        <div class="value" id="todayUnique">0</div>
+                    </div>
+                    <div class="report-item-icon">👤</div>
+                </div>
+                <div class="report-item">
+                    <div class="report-item-info">
+                        <h4>Returning Viewers</h4>
+                        <div class="value" id="todayReturning">0</div>
+                    </div>
+                    <div class="report-item-icon">🔁</div>
+                </div>
+                <div class="report-item">
+                    <div class="report-item-info">
+                        <h4>Anti Bypass</h4>
+                        <div class="value" id="todayBypass">0</div>
+                    </div>
+                    <div class="report-item-icon">🛡️</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="create-section">
+            <h2>Create Short Link</h2>
+            <form id="createForm">
+                <div class="form-group">
+                    <label>Long URL *</label>
+                    <input type="url" id="longUrl" placeholder="https://example.com/very/long/url" required>
+                </div>
+                <div class="form-group">
+                    <label>Custom Code (Optional)</label>
+                    <input type="text" id="customCode" placeholder="e.g., Post34">
+                </div>
+                <div class="form-group">
+                    <label>Partner (Optional)</label>
+                    <select id="partner">
+                        <option value="">No Partner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Specific Referrer Link (Optional)</label>
+                    <input type="url" id="referrerUrl" placeholder="https://arolinks.com/abc123">
+                    <small style="color: #8b92a9; font-size: 12px;">Users must come from this specific URL to access the link</small>
+                </div>
+                <div class="form-group">
+                    <label>Expires At (Optional)</label>
+                    <input type="datetime-local" id="expiresAt">
+                </div>
+                <button type="submit" class="submit-btn">Shorten URL</button>
+            </form>
+        </div>
+
+        <div class="links-section">
+            <h2>Your Short Links</h2>
+            <div id="linksList" class="loading">Loading links...</div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div id="analyticsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Analytics</h2>
+                <button class="close-btn" onclick="closeModal()">Close</button>
+            </div>
+            <div id="analyticsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let authToken = localStorage.getItem('maxlinks_token');
+
+        if (!authToken) {
+            window.location.href = '/';
+        }
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                month: '2-digit', 
+                day: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            };
+            document.getElementById('currentTime').textContent = now.toLocaleString('en-US', options);
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API_BASE}/api/urls`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const links = await res.json();
+
+                // Calculate total stats
+                let totalViews = 0;
+                let totalBypass = 0;
+                links.forEach(link => {
+                    totalViews += link.clicks || 0;
+                });
+
+                // Get unique viewers (approximate - count of unique IPs across all links)
+                const analyticsRes = await fetch(`${API_BASE}/api/stats/global`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                if (analyticsRes.ok) {
+                    const stats = await analyticsRes.json();
+                    document.getElementById('totalViews').textContent = stats.totalClicks || totalViews;
+                    document.getElementById('uniqueViewers').textContent = stats.uniqueIPs || 0;
+                    document.getElementById('returningViewers').textContent = stats.returningVisitors || 0;
+                    document.getElementById('antiBypass').textContent = stats.bypassAttempts || 0;
+                    
+                    // Today's stats
+                    document.getElementById('todayViews').textContent = stats.todayClicks || 0;
+                    document.getElementById('todayUnique').textContent = stats.todayUniqueIPs || 0;
+                    document.getElementById('todayReturning').textContent = stats.todayReturning || 0;
+                    document.getElementById('todayBypass').textContent = stats.todayBypass || 0;
+                } else {
+                    // Fallback if global stats endpoint doesn't exist yet
+                    document.getElementById('totalViews').textContent = totalViews;
+                }
+            } catch (err) {
+                console.error('Error loading stats:', err);
+            }
+        }
+
+        async function loadPartners() {
+            try {
+                const res = await fetch(`${API_BASE}/api/partners`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const partners = await res.json();
+                
+                const select = document.getElementById('partner');
+                partners.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.textContent = p.name;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Error loading partners:', err);
+            }
+        }
+
+        async function loadLinks() {
+            try {
+                const res = await fetch(`${API_BASE}/api/urls`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                if (res.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const links = await res.json();
+                const container = document.getElementById('linksList');
+                
+                if (links.length === 0) {
+                    container.innerHTML = '<p style="color: #8b92a9;">No links yet. Create your first one!</p>';
+                    return;
+                }
+
+                container.innerHTML = links.map(link => `
+                    <div class="link-item">
+                        <div class="link-code">${API_BASE}/${link.code}</div>
+                        <div class="link-url">→ ${link.url}</div>
+                        <div class="link-meta">
+                            <span>📅 ${new Date(link.created).toLocaleDateString()}</span>
+                            <span>👁️ ${link.clicks} clicks</span>
+                            ${link.partner_name ? `<span>🤝 ${link.partner_name}</span>` : ''}
+                            ${link.expires_at ? `<span>⏰ Expires: ${new Date(link.expires_at).toLocaleDateString()}</span>` : ''}
+                        </div>
+                        <div class="link-actions">
+                            <button class="btn btn-copy" onclick="copyLink('${link.code}')">📋 Copy</button>
+                            <button class="btn btn-analytics" onclick="showAnalytics('${link.code}')">📊 Analytics</button>
+                            <button class="btn btn-delete" onclick="deleteLink('${link.code}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Error loading links:', err);
+                document.getElementById('linksList').innerHTML = '<p style="color: #f44336;">Error loading links</p>';
+            }
+        }
+
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                url: document.getElementById('longUrl').value,
+                code: document.getElementById('customCode').value || undefined,
+                partner_id: document.getElementById('partner').value || undefined,
+                expires_at: document.getElementById('expiresAt').value || undefined
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/api/urls`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    alert('✅ Link created successfully!');
+                    e.target.reset();
+                    loadLinks();
+                    loadStats();
+                } else {
+                    const err = await res.json();
+                    alert('❌ Error: ' + err.error);
+                }
+            } catch (err) {
+                alert('❌ Error creating link');
+            }
+        });
+
+        function copyLink(code) {
+            const url = `${API_BASE}/${code}`;
+            navigator.clipboard.writeText(url);
+            alert('✅ Link copied to clipboard!');
+        }
+
+        async function showAnalytics(code) {
+            document.getElementById('analyticsModal').style.display = 'block';
+            document.getElementById('analyticsContent').innerHTML = '<div class="loading">Loading analytics...</div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/analytics/${code}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await res.json();
+
+                let html = `
+                    <div class="analytics-stats">
+                        <div class="analytics-card">
+                            <div class="analytics-value">${data.totalClicks}</div>
+                            <div class="analytics-label">Total Clicks</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-value">${data.topCountries.length}</div>
+                            <div class="analytics-label">Countries</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-value">${data.devices.length}</div>
+                            <div class="analytics-label">Device Types</div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">🌍 Top Countries</div>
+                    ${data.topCountries.map(c => `
+                        <div class="country-item">
+                            <strong>${c.country}</strong> - ${c.count} clicks
+                        </div>
+                    `).join('') || '<p style="color: #8b92a9;">No country data yet</p>'}
+
+                    <div class="section-title">📱 Device Breakdown</div>
+                    ${data.devices.map(d => `
+                        <div class="device-item">
+                            <strong>${d.device}</strong> - ${d.count} clicks
+                        </div>
+                    `).join('') || '<p style="color: #8b92a9;">No device data yet</p>'}
+
+                    <div class="section-title">⚠️ Bypass Attempts</div>
+                    <div class="country-item">
+                        ${data.bypassAttempts.count} attempts detected
+                        ${data.bypassAttempts.latest ? `<br><small>Latest: ${new Date(data.bypassAttempts.latest).toLocaleString()}</small>` : ''}
+                    </div>
+
+                    <div class="section-title">🕒 Recent Clicks</div>
+                    ${data.recentClicks.slice(0, 10).map(c => `
+                        <div class="click-item">
+                            <strong>🌍 ${c.country || 'Unknown'}, ${c.city || 'Unknown'}</strong><br>
+                            📱 ${c.device} • 🌐 ${c.browser} • 💻 ${c.os}<br>
+                            <small style="color: #8b92a9;">${new Date(c.clicked_at).toLocaleString()}</small>
+                        </div>
+                    `).join('') || '<p style="color: #8b92a9;">No clicks yet</p>'}
+                `;
+
+                document.getElementById('analyticsContent').innerHTML = html;
+            } catch (err) {
+                document.getElementById('analyticsContent').innerHTML = '<p style="color: #f44336;">Error loading analytics</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('analyticsModal').style.display = 'none';
+        }
+
+        async function deleteLink(code) {
+            if (!confirm('⚠️ Are you sure you want to delete this link?')) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/urls/${code}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (res.ok) {
+                    alert('✅ Link deleted successfully!');
+                    loadLinks();
+                    loadStats();
+                }
+            } catch (err) {
+                alert('❌ Error deleting link');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('maxlinks_token');
+            window.location.href = '/';
+        }
+
+        // Load data on page load
+        loadStats();
+        loadPartners();
+        loadLinks();
+        
+        // Refresh stats every 30 seconds
+        setInterval(loadStats, 30000);
+    </script>
+</body>
+</html>
